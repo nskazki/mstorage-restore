@@ -8,11 +8,11 @@ import P from 'bluebird'
 import Logger from 'bellman'
 import assert from 'power-assert'
 
-import storeQueue from '../../app-build/libs/storeQueue'
-import restoreQueue from '../../app-build/libs/restoreQueue'
+import storeQueue from '../src-build/store/storeQueue'
+import restoreQueue from '../src-build/restore/restoreQueue'
 
 let logger = new Logger()
-let restorePath = resolve(__dirname, './v3-restore-load')
+let restorePath = resolve(__dirname, '../test-highload-local/restore-load')
 if (existsSync(restorePath)) unlinkSync(restorePath)
 
 console.time('mapped!')
@@ -43,6 +43,3 @@ P.resolve()
     .tap(() => console.timeEnd('compared!'))
     .tap(() => console.info('memory [MB]:', process.memoryUsage().heapUsed/1024/1024)))
   .catch(err => logger.error(err))
-
-// npm i && babel app/libs-test-local/test-load-queue.es -d .
-// node --nouse-idle-notification --max-old-space-size=8096 app/libs-test-local/test-load-queue.js

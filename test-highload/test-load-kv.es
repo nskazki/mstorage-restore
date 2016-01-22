@@ -8,11 +8,11 @@ import P from 'bluebird'
 import Logger from 'bellman'
 import assert from 'power-assert'
 
-import storeKV from '../../app-build/libs/storeKV'
-import restoreKV from '../../app-build/libs/restoreKV'
+import storeKV from '../src-build/store/storeKV'
+import restoreKV from '../src-build/restore/restoreKV'
 
 let logger = new Logger()
-let restorePath = resolve(__dirname, './v3-restore-load')
+let restorePath = resolve(__dirname, '../test-highload-local/restore-load')
 if (existsSync(restorePath)) unlinkSync(restorePath)
 
 console.time('mapped!')
@@ -43,6 +43,3 @@ P.resolve()
     .tap(() => console.timeEnd('compared!'))
     .tap(() => console.info('memory [MB]:', process.memoryUsage().heapUsed/1024/1024)))
   .catch(err => logger.error(err))
-
-// npm i && babel app/libs-test-local/test-load-kv.es -d .
-// node --nouse-idle-notification --max-old-space-size=8096 app/libs-test-local/test-load-kv.js

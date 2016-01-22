@@ -9,7 +9,15 @@
     "eslint": "eslint $(find . -not -path '*/*-build/*' -not -path '*/node_modules/*' -type f -name '*.es')",
     "mocha": "mocha test",
     "test": "npm run eslint && npm run mocha",
-    "npmignore": "npm pack . > /dev/null && tar -tvf *.tgz && rm *.tgz"
+    "npmignore": "npm pack . > /dev/null && tar -tvf *.tgz && rm *.tgz",
+    "t-hl": "npm run t-hl:runup && npm run t-hl:run",
+    "t-hl:runup": "npm run t-hl:clear && npm run t-hl:build",
+    "t-hl:clear": "rm -f test-highload-local/*",
+    "t-hl:build": "babel test-highload --retain-lines --out-dir test-highload-build",
+    "t-hl:run": "npm run t-hl:kv && npm run t-hl:hashVault && npm run t-hl:queue",
+    "t-hl:kv": "node --nouse-idle-notification --max-old-space-size=4096 test-highload-build/test-load-kv.js",
+    "t-hl:hashVault": "node --nouse-idle-notification --max-old-space-size=4096 test-highload-build/test-load-hashVault.js",
+    "t-hl:queue": "node --nouse-idle-notification --max-old-space-size=4096 test-highload-build/test-load-queue.js"
   },
   "repository": {
     "type": "git",
@@ -37,7 +45,8 @@
     "eslint": "1.10.1",
     "eslint-plugin-mocha": "^1.1.0",
     "mocha": "^2.3.4",
-    "mstorage": "^1.2.2"
+    "mstorage": "^1.2.2",
+    "power-assert": "^1.2.0"
   },
   "dependencies": {
     "bluebird": "^3.1.1",
