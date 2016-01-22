@@ -1,0 +1,54 @@
+{
+  "name": "mstorage-restore",
+  "version": "1.0.0",
+  "description": "like jsonWrite(patj, storage) and storage = jsonRead(path) for large (~1e7) mstoreges",
+  "main": "src-build/index.js",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "babel src --retain-lines --out-dir src-build",
+    "eslint": "eslint $(find . -not -path '*/*-build/*' -not -path '*/node_modules/*' -type f -name '*.es')",
+    "mocha": "mocha test",
+    "test": "npm run eslint && npm run mocha",
+    "npmignore": "npm pack . > /dev/null && tar -tvf *.tgz && rm *.tgz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nskazki/mstorage-restore.git"
+  },
+  "keywords": [
+    "mstorage",
+    "serialize",
+    "deserialize"
+  ],
+  "author": "nskazki@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nskazki/mstorage-restore/issues"
+  },
+  "homepage": "https://github.com/nskazki/mstorage-restore#readme",
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-eslint": "^4.1.6",
+    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-plugin-espower": "^2.1.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-register": "^6.4.3",
+    "bellman": "^1.1.5",
+    "eslint": "1.10.1",
+    "eslint-plugin-mocha": "^1.1.0",
+    "mocha": "^2.3.4",
+    "mstorage": "^1.2.2"
+  },
+  "dependencies": {
+    "bluebird": "^3.1.1",
+    "debug": "^2.2.0",
+    "jsonfile": "^2.2.3",
+    "lodash": "^4.0.0",
+    "mkdirp": "^0.5.1",
+    "simple-e2p": "^1.0.1",
+    "split": "^1.0.0"
+  },
+  "directories": {
+    "test": "test"
+  }
+}
