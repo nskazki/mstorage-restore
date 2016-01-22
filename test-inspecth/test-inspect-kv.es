@@ -9,12 +9,12 @@ import { forEach, isObject } from 'lodash'
 import Logger from 'bellman'
 import assert from 'power-assert'
 
-import storeKV from '../libs/storeKV'
-import restoreKV from '../libs/restoreKV'
+import storeKV from '../src/store/storeKV'
+import restoreKV from '../src/restore/restoreKV'
 
 let logger = new Logger()
 let inspect = v => inspectSimple(v, { colors: true, depth: null })
-let restorePath = resolve(__dirname, './v2-restore')
+let restorePath = resolve(__dirname, '../test-inspecth-local/restore-load')
 let kv = new KV()
 
 let a = { a: 'a' }

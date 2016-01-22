@@ -12,12 +12,18 @@
     "npmignore": "npm pack . > /dev/null && tar -tvf *.tgz && rm *.tgz",
     "t-hl": "npm run t-hl:runup && npm run t-hl:run",
     "t-hl:runup": "npm run t-hl:clear && npm run t-hl:build",
-    "t-hl:clear": "rm -f test-highload-local/*",
+    "t-hl:clear": "mkdir -p test-highload-local && rm -f test-highload-local/*",
     "t-hl:build": "babel test-highload --retain-lines --out-dir test-highload-build",
     "t-hl:run": "npm run t-hl:kv && npm run t-hl:hashVault && npm run t-hl:queue",
     "t-hl:kv": "node --nouse-idle-notification --max-old-space-size=4096 test-highload-build/test-load-kv.js",
     "t-hl:hashVault": "node --nouse-idle-notification --max-old-space-size=4096 test-highload-build/test-load-hashVault.js",
-    "t-hl:queue": "node --nouse-idle-notification --max-old-space-size=4096 test-highload-build/test-load-queue.js"
+    "t-hl:queue": "node --nouse-idle-notification --max-old-space-size=4096 test-highload-build/test-load-queue.js",
+    "t-ih": "npm run t-ih:runup && npm run t-ih:run",
+    "t-ih:runup": "mkdir -p test-inspecth-local && rm -f test-inspecth-local/*",
+    "t-ih:run": "npm run t-ih:kv && npm run t-ih:queue && npm run t-ih:hashVault",
+    "t-ih:kv": "babel-node test-inspecth/test-inspect-kv.es",
+    "t-ih:hashVault": "babel-node test-inspecth/test-inspect-hashVault.es",
+    "t-ih:queue": "babel-node test-inspecth/test-inspect-queue.es"
   },
   "repository": {
     "type": "git",

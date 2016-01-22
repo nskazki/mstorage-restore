@@ -9,12 +9,12 @@ import { forEach, isObject } from 'lodash'
 import Logger from 'bellman'
 import assert from 'power-assert'
 
-import storeQueue from '../libs/storeQueue'
-import restoreQueue from '../libs/restoreQueue'
+import storeQueue from '../src/store/storeQueue'
+import restoreQueue from '../src/restore/restoreQueue'
 
 let logger = new Logger()
 let inspect = v => inspectSimple(v, { colors: true, depth: null })
-let restorePath = resolve(__dirname, './v2-restore')
+let restorePath = resolve(__dirname, '../test-inspecth-local/restore-load')
 let queue = new Queue()
 
 queue.add({ 0: 0 })

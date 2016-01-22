@@ -9,12 +9,12 @@ import { forEach, isObject } from 'lodash'
 import Logger from 'bellman'
 import assert from 'power-assert'
 
-import storeHashVault from '../libs/storeHashVault'
-import restoreHashVault from '../libs/restoreHashVault'
+import storeHashVault from '../src/store/storeHashVault'
+import restoreHashVault from '../src/restore/restoreHashVault'
 
 let logger = new Logger()
 let inspect = v => inspectSimple(v, { colors: true, depth: null })
-let restorePath = resolve(__dirname, './v2-restore')
+let restorePath = resolve(__dirname, '../test-inspecth-local/restore-load')
 let hashVault = new HashVault()
 
 hashVault.add({ 0: 0 })
