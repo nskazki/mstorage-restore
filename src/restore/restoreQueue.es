@@ -32,11 +32,14 @@ export default function restoreQueue(queueName, restorePath) {
   debug(`  s.restoreKeyPath: ${restoreVaultPlan._storage.restoreKeyPath}`)
 
   let queue = new Queue()
-  return P.resolve()
+  let _storage = P.resolve()
     .then(() => readArray(restoreVaultPlan._storage.restoreKeyPath, str2obj))
     .then(it => queue._storage = it)
+  let _queue = P.resolve()
     .then(() => readArray(restoreVaultPlan._queue.restoreKeyPath, parseInt))
     .then(it => queue._queue = it)
+
+  return P.join(_storage, _queue)
     .return(queue)
     .catch(err => {
       let message = `restoreQueue problem!'\

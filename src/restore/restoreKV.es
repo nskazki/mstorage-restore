@@ -32,11 +32,14 @@ export default function restoreKV(kvName, restorePath) {
   debug(`  k.restoreKeyPath: ${restoreVaultPlan._keys.restoreKeyPath}`)
 
   let kv = new KV()
-  return P.resolve()
+  let _keys = P.resolve()
     .then(() => readArray(restoreVaultPlan._keys.restoreKeyPath, str2obj))
     .then(it => kv._keys = it)
+  let _values = P.resolve()
     .then(() => readArray(restoreVaultPlan._values.restoreKeyPath, str2obj))
     .then(it => kv._values = it)
+
+  return P.join(_keys, _values)
     .return(kv)
     .catch(err => {
       let message = `restoreKV problem!'\
