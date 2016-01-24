@@ -1,44 +1,64 @@
 'use strict'
 
 import { HashVault } from 'mstorage'
-import { resolve } from 'path'
 import { existsSync, unlinkSync } from 'fs'
-import { range } from 'lodash'
+import { sync as mkdirpSync } from 'mkdirp'
+import { tmpNameSync } from 'tmp'
+import { range, merge } from 'lodash'
+import { dirname, resolve } from 'path'
+import { } from 'console.table'
 import P from 'bluebird'
 import Logger from 'bellman'
+import pretty from 'pretty-ms'
 import assert from 'power-assert'
 
 import storeHashVault from '../src-build/store/storeHashVault'
 import restoreHashVault from '../src-build/restore/restoreHashVault'
 
 let logger = new Logger()
-let restorePath = resolve(__dirname, '../test-highload-local/restore-load')
-if (existsSync(restorePath)) unlinkSync(restorePath)
+let plan = [ 1e3, 1e4, 1e5, 1e6, 1e7 ]
+let nums = false
+let objs = true
 
-console.time('mapped!')
-
-let hashVault = new HashVault()
-let arr = range(0, 1e7).map(el => ({ el }))
-hashVault.init(arr)
-
-console.timeEnd('mapped!')
-console.info('hashVault size:', hashVault.size())
-console.info('memory [MB]:', process.memoryUsage().heapUsed/1024/1024)
-
-P.resolve()
-  .then(() => P.resolve()
-    .tap(() => console.time('stored!'))
-    .then(() => storeHashVault(hashVault, 'some-name', restorePath))
-    .tap(() => console.timeEnd('stored!'))
-    .tap(() => console.info('memory [MB]:', process.memoryUsage().heapUsed/1024/1024)))
-  .then(() => P.resolve()
-    .tap(() => console.time('restored!'))
-    .then(() => restoreHashVault('some-name', restorePath))
-    .tap(() => console.timeEnd('restored!'))
-    .tap(() => console.info('memory [MB]:', process.memoryUsage().heapUsed/1024/1024)))
-  .then(it => P.resolve(it)
-    .tap(() => console.time('compared!'))
-    .then(it => assert.deepStrictEqual(it, hashVault))
-    .tap(() => console.timeEnd('compared!'))
-    .tap(() => console.info('memory [MB]:', process.memoryUsage().heapUsed/1024/1024)))
+P.resolve(plan)
+  .mapSeries(size => P
+    .join(
+      test(size, nums).then(res => merge({ size, objs: ' ', nums: 'x' }, res)),
+      test(size, objs).then(res => merge({ size, objs: 'x', nums: ' ' }, res)))
+    .tap(() => console.error(`done - ${size}`)))
+  .reduce((acc, part) => acc.concat(part), [])
+  .then(table => {
+    console.info('HashVault:')
+    console.table(table)
+  })
   .catch(err => logger.error(err))
+
+function test(size, mapNums = false) {
+  let template = resolve(__dirname, '../test-highload-local/restore-XXXXXX')
+  mkdirpSync(dirname(template))
+  let restorePath = tmpNameSync({ template })
+
+  let mapping, storing, restoring, comparing
+  let res = { mapped: null, stored: null, restored: null, compared: null }
+
+  mapping = Date.now()
+  let hashVault = new HashVault()
+  let arr = range(0, size).map(el => mapNums ? { el } : el)
+  hashVault.init(arr)
+  res.mapped = pretty(Date.now() - mapping)
+
+  return P.resolve()
+    .then(() => P.resolve()
+      .tap(() => storing = Date.now())
+      .then(() => storeHashVault(hashVault, 'some-name', restorePath))
+      .tap(() => res.stored = pretty(Date.now() - storing)))
+    .then(() => P.resolve()
+      .tap(() => restoring = Date.now())
+      .then(() => restoreHashVault('some-name', restorePath))
+      .tap(() => res.restored = pretty(Date.now() - restoring)))
+    .then(it => P.resolve(it)
+      .tap(() => comparing = Date.now())
+      .then(it => assert.deepStrictEqual(it, hashVault))
+      .tap(() => res.compared = pretty(Date.now() - comparing)))
+    .return(res)
+}
