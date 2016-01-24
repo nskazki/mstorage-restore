@@ -1,13 +1,11 @@
 'use strict'
 
-import { createReadStream } from 'fs'
 import { readFileSync as readJsonSync } from 'jsonfile'
 import { chain, isString, isObject, merge } from 'lodash'
 import { KV } from 'mstorage'
 import P from 'bluebird'
 import Debug from 'debug'
-import e2p from 'simple-e2p'
-import split from 'split'
+import readArray from './readArray'
 
 let debug = new Debug('libs-restore-mstorage:restoreKV')
 let obj2str = JSON.stringify
@@ -35,9 +33,9 @@ export default function restoreKV(kvName, restorePath) {
 
   let kv = new KV()
   return P.resolve()
-    .then(() => restore_keys(restoreVaultPlan._keys.restoreKeyPath))
+    .then(() => readArray(restoreVaultPlan._keys.restoreKeyPath, str2obj))
     .then(it => kv._keys = it)
-    .then(() => restore_values(restoreVaultPlan._values.restoreKeyPath))
+    .then(() => readArray(restoreVaultPlan._values.restoreKeyPath, str2obj))
     .then(it => kv._values = it)
     .return(kv)
     .catch(err => {
@@ -49,46 +47,4 @@ export default function restoreKV(kvName, restorePath) {
         ? P.reject(merge(err, { message }))
         : P.reject(new Error(message))
     })
-}
-
-function restore_keys(restoreKeyPath) {
-  let summ = []
-  let readf = createReadStream(restoreKeyPath, { encoding: 'utf8' })
-  let parse = readf
-    .pipe(split())
-    .on('data', line => {
-      if (/^\s*$/.test(line)) return
-      if (line === 'undefined') {
-        summ.push(undefined)
-        delete summ[summ.length - 1]
-      } else {
-        summ.push(str2obj(line))
-      }
-    })
-
-  return P.join(
-    e2p(readf, 'end', 'error'),
-    e2p(parse, 'end', 'error')
-  ).return(summ)
-}
-
-function restore_values(restoreKeyPath) {
-  let summ = []
-  let readf = createReadStream(restoreKeyPath, { encoding: 'utf8' })
-  let parse = readf
-    .pipe(split())
-    .on('data', line => {
-      if (/^\s*$/.test(line)) return
-      if (line === 'undefined') {
-        summ.push(undefined)
-        delete summ[summ.length - 1]
-      } else {
-        summ.push(str2obj(line))
-      }
-    })
-
-  return P.join(
-    e2p(readf, 'end', 'error'),
-    e2p(parse, 'end', 'error')
-  ).return(summ)
 }

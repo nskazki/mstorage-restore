@@ -1,13 +1,11 @@
 'use strict'
 
-import { createReadStream } from 'fs'
 import { readFileSync as readJsonSync } from 'jsonfile'
 import { chain, isString, isObject, merge } from 'lodash'
 import { HashVault } from 'mstorage'
 import P from 'bluebird'
 import Debug from 'debug'
-import e2p from 'simple-e2p'
-import split from 'split'
+import readArray from './readArray'
 
 let debug = new Debug('libs-restore-mstorage:restoreHashVault')
 let obj2str = JSON.stringify
@@ -33,7 +31,7 @@ export default function restoreHashVault(hashVaultName, restorePath) {
 
   let hashVault = new HashVault()
   return P.resolve()
-    .then(() => restore_array(restoreVaultPlan._array.restoreKeyPath))
+    .then(() => readArray(restoreVaultPlan._array.restoreKeyPath, parseInt))
     .then(it => hashVault._array = it)
     .return(hashVault)
     .catch(err => {
@@ -45,20 +43,4 @@ export default function restoreHashVault(hashVaultName, restorePath) {
         ? P.reject(merge(err, { message }))
         : P.reject(new Error(message))
     })
-}
-
-function restore_array(restoreKeyPath) {
-  let summ = []
-  let readf = createReadStream(restoreKeyPath, { encoding: 'utf8' })
-  let parse = readf
-    .pipe(split())
-    .on('data', line => {
-      if (/^\s*$/.test(line)) return
-      summ.push(parseInt(line))
-    })
-
-  return P.join(
-    e2p(readf, 'end', 'error'),
-    e2p(parse, 'end', 'error')
-  ).return(summ)
 }
