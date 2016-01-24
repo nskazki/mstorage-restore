@@ -12,9 +12,17 @@ export default function readArray(restoreKeyPath, fmt = v => v) {
     .pipe(split())
     .on('data', line => {
       if (/^\s*$/.test(line)) return
-      if (line === 'undefined') {
+      if (line === '__delete__') {
         summ.push(undefined)
         delete summ[summ.length - 1]
+      } else if (line === '__undefined__') {
+        summ.push(undefined)
+      } else if (line === '__null__') {
+        summ.push(null)
+      } else if (line === '__infinity__') {
+        summ.push(Infinity)
+      } else if (line === '__NaN__') {
+        summ.push(NaN)
       } else {
         summ.push(fmt(line))
       }

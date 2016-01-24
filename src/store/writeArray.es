@@ -12,8 +12,8 @@ export default function writeArray(array, restoreKeyPath, fmt = v => v) {
     let chunkCurr = 0
     let chunkBuff = ''
     for (let index = 0; index !== array.length; index++) {
-      let num = array[index]
-      chunkBuff = chunkBuff + fmt(num) + '\n'
+      let val = array[index]
+      chunkBuff = chunkBuff + str(array, val, index, fmt) + '\n'
       chunkCurr++
       if (chunkCurr === chunkSize) {
         appendFileSync(restoreKeyPath, chunkBuff)
@@ -24,4 +24,20 @@ export default function writeArray(array, restoreKeyPath, fmt = v => v) {
 
     appendFileSync(restoreKeyPath, chunkBuff)
   })
+}
+
+function str(array, val, index, fmt) {
+  if (typeof val === 'number') {
+    if (isFinite(val)) return fmt(val)
+    else if (val !== val) return '__NaN__'
+    else return '__infinity__'
+  } else if (val === null) {
+    return '__null__'
+  } else if (val === undefined) {
+    return array.hasOwnProperty(index)
+      ? '__undefined__'
+      : '__delete__'
+  } else {
+    return fmt(val)
+  }
 }
