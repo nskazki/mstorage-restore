@@ -7,7 +7,7 @@ import P from 'bluebird'
 import Debug from 'debug'
 import readArray from './readArray'
 
-let debug = new Debug('libs-restore-mstorage:restoreHashVault')
+let debug = new Debug('libs-mstorage-restore:restoreHashVault')
 let obj2str = JSON.stringify
 
 export default function restoreHashVault(hashVaultName, restorePath) {

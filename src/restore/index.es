@@ -10,7 +10,7 @@ import restoreHashVault from './restoreHashVault'
 import restoreQueue from './restoreQueue'
 import restoreKV from './restoreKV'
 
-let debug = new Debug('libs-restore-mstorage:restore')
+let debug = new Debug('libs-mstorage-restore:restore')
 let type2restore = {
   'HashVault': restoreHashVault,
   'Queue': restoreQueue,

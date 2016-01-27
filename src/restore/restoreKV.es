@@ -7,7 +7,7 @@ import P from 'bluebird'
 import Debug from 'debug'
 import readArray from './readArray'
 
-let debug = new Debug('libs-restore-mstorage:restoreKV')
+let debug = new Debug('libs-mstorage-restore:restoreKV')
 let obj2str = JSON.stringify
 let str2obj = JSON.parse
 

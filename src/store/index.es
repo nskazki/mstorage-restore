@@ -11,7 +11,7 @@ import storeHashVault from './storeHashVault'
 import storeQueue from './storeQueue'
 import storeKV from './storeKV'
 
-let debug = new Debug('libs-restore-mstorage:store')
+let debug = new Debug('libs-mstorage-restore:store')
 let mkdirp = promisify(mkdirpNode)
 let type2storer = {
   'HashVault': storeHashVault,
