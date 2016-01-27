@@ -13,7 +13,7 @@
     "t-hl": "npm run build && npm run t-hl:build && npm run t-hl:run",
     "t-hl:build": "babel test-highload --retain-lines --out-dir test-highload-build",
     "t-hl:run": "npm run t-hl:kv && npm run t-hl:qe && npm run t-hl:hv",
-    "t-hl:node": "node --nouse-idle-notification --max-old-space-size=4096",
+    "t-hl:node": "node --expose-gc --nouse-idle-notification --max-old-space-size=4096",
     "t-hl:kv": "npm run t-hl:node -- test-highload-build/testStorage -t KV -r '1e3, 1e4, 1e5, 1e6, 1e7'",
     "t-hl:qe": "npm run t-hl:node -- test-highload-build/testStorage -t Queue -r '1e3, 1e4, 1e5, 1e6, 1e7'",
     "t-hl:hv": "npm run t-hl:node -- test-highload-build/testStorage -t HashVault -r '1e3, 1e4, 1e5, 1e6, 1e7'",
@@ -55,7 +55,8 @@
     "mstorage": "^1.2.4",
     "power-assert": "^1.2.0",
     "pretty-ms": "^2.1.0",
-    "tmp": "0.0.28"
+    "tmp": "0.0.28",
+    "try-gc": "^1.0.0"
   },
   "dependencies": {
     "bluebird": "^3.1.1",
