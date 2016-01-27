@@ -96,6 +96,11 @@ If you want to perform load testing locally:
 npm run t-hl
 ```
 
+If you want to perform auto test:
+```
+npm test
+```
+
 If you want to debug the process:
 ```
 DEBUG=libs-mstorage-restore* node you-app.js
