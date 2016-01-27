@@ -1,6 +1,6 @@
 {
   "name": "mstorage-restore",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "like jsonWrite(patj, storage) and storage = jsonRead(path) for large (~1e7) mstoreges",
   "main": "src-build/index.js",
   "scripts": {
