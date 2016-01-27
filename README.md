@@ -4,7 +4,7 @@
 npm i -S mstorage mstorage-restore
 ```
 
-Specializer and deserializer to [mstorage](https://github.com/nskazki/mstorage)
+Special serializer and deserializer for [mstorage](https://github.com/nskazki/mstorage)
 
 Once I faced the following problem: I needed to serialize couple of millions of records and general purpose libs failed to do this. 8 GB RAM is not enough for JSON to serialization, same for [JSONstream](https://github.com/dominictarr/JSONStream) to deserialization.
 
