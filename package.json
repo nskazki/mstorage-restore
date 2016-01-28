@@ -6,7 +6,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "babel src --retain-lines --out-dir src-build",
-    "eslint": "eslint $(find . -not -path '*/*-build/*' -not -path '*/node_modules/*' -type f -name '*.es')",
+    "eslint": "eslint $(find . -not -path '*/*-build/*' -not -path '*/node_modules/*' -type f -name '*.es6')",
     "mocha": "mocha test",
     "test": "npm run eslint && npm run mocha",
     "npmignore": "npm pack . > /dev/null && tar -tvf *.tgz && rm *.tgz",
@@ -20,9 +20,9 @@
     "t-ih": "npm run t-ih:build && npm run t-ih:run",
     "t-ih:build": "mkdir -p test-inspecth-local && rm -f test-inspecth-local/*",
     "t-ih:run": "npm run t-ih:kv && npm run t-ih:qe && npm run t-ih:hv",
-    "t-ih:kv": "babel-node test-inspecth/test-inspect-kv.es",
-    "t-ih:qe": "babel-node test-inspecth/test-inspect-queue.es",
-    "t-ih:hv": "babel-node test-inspecth/test-inspect-hashVault.es"
+    "t-ih:kv": "babel-node test-inspecth/test-inspect-kv",
+    "t-ih:qe": "babel-node test-inspecth/test-inspect-queue",
+    "t-ih:hv": "babel-node test-inspecth/test-inspect-hashVault"
   },
   "repository": {
     "type": "git",
