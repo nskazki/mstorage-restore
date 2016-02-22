@@ -8,9 +8,10 @@ import Debug from 'debug'
 
 let debug = new Debug('libs-mstorage-restore:exists')
 
-export default function mv(restorePath, debugInfo=[]) {
+export default function mv(restorePath, richInfo=false) {
   return P.try(() => {
     debug(`restorePath: ${restorePath}`)
+    let debugInfo=[]
 
     if (!existsSync(restorePath)) {
       debugInfo.push({
@@ -18,7 +19,9 @@ export default function mv(restorePath, debugInfo=[]) {
         type: 'restorePath' })
       debug(`restorePath not exist -> return false\
         \n\t restorePath: ${restorePath}`)
-      return false
+      return richInfo
+        ? { exist: false, debugInfo }
+        : false
     }
 
     let restorePlanBase = readJsonSync(restorePath)
@@ -55,6 +58,9 @@ export default function mv(restorePath, debugInfo=[]) {
         })
     })
 
-    return isVaultPlansExist && isKeyDumpsExist
+    let exist = isVaultPlansExist && isKeyDumpsExist
+    return richInfo
+      ? { exist, debugInfo }
+      : exist
   })
 }
