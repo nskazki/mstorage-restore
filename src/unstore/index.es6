@@ -14,7 +14,7 @@ export default function unstore(restorePath) {
     .then(() => exists(restorePath))
     .then(ex => ex
       ? P.resolve()
-      : P.reject(`unstore problem: restorePath not exist - ${restorePath}`))
+      : P.reject(new Error(`unstore problem: restorePath not exist - ${restorePath}`)))
     .return(patterns)
     .map(p => glob(p, { dot: true }))
     .reduce((acc, part) => acc.concat(part), [])
