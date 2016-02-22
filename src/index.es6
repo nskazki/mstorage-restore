@@ -3,5 +3,6 @@
 module.exports = {
   store: require('./store'),
   restore: require('./restore'),
-  unstore: require('./unstore')
+  unstore: require('./unstore'),
+  exists: require('./exists')
 }
