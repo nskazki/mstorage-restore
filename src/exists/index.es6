@@ -26,7 +26,7 @@ export default function mv(restorePath, richInfo=false) {
 
     let restorePlanBase = readJsonSync(restorePath)
 
-    let isVaultPlansExist = restorePlanBase.every(vMeta => {
+    let isVaultPlansExist = restorePlanBase.map(vMeta => {
       let isVaultPlanExist = existsSync(vMeta.restoreVaultPath)
       if (!isVaultPlanExist) {
         debugInfo.push({
@@ -36,9 +36,9 @@ export default function mv(restorePath, richInfo=false) {
       }
 
       return isVaultPlanExist
-    })
+    }).reduce((acc, part) => acc && part, true)
 
-    let isKeyDumpsExist = restorePlanBase.every(vMeta => {
+    let isKeyDumpsExist = restorePlanBase.map(vMeta => {
       if (!existsSync(vMeta.restoreVaultPath)) return false
 
       let restoreVaultPlan = readJsonSync(vMeta.restoreVaultPath)
@@ -56,7 +56,7 @@ export default function mv(restorePath, richInfo=false) {
 
           return isKeyDumpExist
         })
-    })
+    }).reduce((acc, part) => acc && part, true)
 
     let exist = isVaultPlansExist && isKeyDumpsExist
     return richInfo
