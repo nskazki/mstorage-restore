@@ -1,10 +1,11 @@
 'use strict'
 
-import { existsSync } from 'fs'
+import { inspect } from 'util'
 import { readFileSync as readJsonSync } from 'jsonfile'
 import { assign, isFunction } from 'lodash'
 import P from 'bluebird'
 import Debug from 'debug'
+import exists from '../exists'
 
 import restoreHashVault from './restoreHashVault'
 import restoreQueue from './restoreQueue'
@@ -20,11 +21,11 @@ let type2restore = {
 export default function restore(restorePath) {
   debug('restorePath: %j', restorePath)
 
-  if (!existsSync(restorePath))
-    return P.reject(new Error(`restore problem: restorePath not exist!\
-      \n\t restorePath: ${restorePath}`))
-
   return P.resolve()
+    .then(() => exists(restorePath, true))
+    .then(({ exist, defugInfo }) => exist
+      ? P.resolve()
+      : P.reject(new Error(`expected files not found: ${inspect(defugInfo)}`)))
     .then(() => readJsonSync(restorePath))
     .map(meta => {
       debug(`vault: ${meta.restoreVaultName}`)
