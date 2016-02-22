@@ -23,9 +23,10 @@ export default function restore(restorePath) {
 
   return P.resolve()
     .then(() => exists(restorePath, true))
-    .then(({ exist, defugInfo }) => exist
+    .then(({ exist, debugInfo }) => exist
       ? P.resolve()
-      : P.reject(new Error(`expected files not found: ${inspect(defugInfo)}`)))
+      : P.reject(new Error(`restore problem: expected files not found: \
+          \n\t${debugInfo.map(e => inspect(e).replace(/\n/g, '')).join('\n\t')}`)))
     .then(() => readJsonSync(restorePath))
     .map(meta => {
       debug(`vault: ${meta.restoreVaultName}`)
