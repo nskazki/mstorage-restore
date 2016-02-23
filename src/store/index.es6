@@ -1,7 +1,7 @@
 'use strict'
 
 import { existsSync } from 'fs'
-import { keys, isFunction, omit } from 'lodash'
+import { keys, isFunction, omit, isPlainObject } from 'lodash'
 import { dirname } from 'path'
 import P, { promisify } from 'bluebird'
 import Debug from 'debug'
@@ -22,6 +22,11 @@ let type2storer = {
 export default function store(vaults, restorePath) {
   debug('restorePath: %j', restorePath)
   debug('vaults: %j', keys(vaults))
+
+  if (!isPlainObject(vaults))
+    return P.reject(new Error(`store problem: vaults must be a PlainObject!\
+      \n\t typeof vaults: ${typeof vaults}\
+      \n\t restorePath: ${restorePath}`))
 
   if (existsSync(restorePath))
     return P.reject(new Error(`store problem: restorePath already exist!\
