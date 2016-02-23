@@ -7,7 +7,7 @@ import { dirname, resolve } from 'path'
 import { sync as mkdirpSync } from 'mkdirp'
 import { sync as glob } from 'glob'
 import { unlinkSync as unlink } from 'fs'
-import { range, concat } from 'lodash'
+import { range, concat, toPlainObject } from 'lodash'
 import P from 'bluebird'
 import assert from 'power-assert'
 
@@ -134,5 +134,5 @@ function genStorages() {
   let qes = range(10).map(() => new Queue())
   let hvs = range(10).map(() => new HashVault())
   let arr = concat(kvs, qes, hvs)
-  return arr
+  return toPlainObject(arr)
 }
