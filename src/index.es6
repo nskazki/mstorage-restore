@@ -6,5 +6,6 @@ module.exports = {
   unstore: require('./unstore'),
   exists: require('./exists'),
   mv: require('./mv'),
-  cp: require('./cp')
+  cp: require('./cp'),
+  unstoreStrict: require('./unstore-strict')
 }
