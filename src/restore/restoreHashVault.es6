@@ -32,10 +32,16 @@ export default function restoreHashVault(hashVaultName, restorePath) {
   let hashVault = new HashVault()
   return P.resolve()
     .then(() => readArray(restoreVaultPlan._array.restoreKeyPath, parseInt))
+    .tap(it => it.length === restoreVaultPlan._array.dumpLength
+      ? P.resolve()
+      : P.reject(new Error(`restoreHashVault problem: unexpected _array dump size\
+          \n\t expected dump size: ${restoreVaultPlan._array.dumpLength}\
+          \n\t actual dump size: ${it.length}\
+          \n\t actual dump path: ${restoreVaultPlan._array.restoreKeyPath}`)))
     .then(it => hashVault._array = it)
     .return(hashVault)
     .catch(err => {
-      let message = `restoreHashVault problem!'\
+      let message = `restoreHashVault problem!\
         \n\t hashVaultName: ${hashVaultName}\
         \n\t restorePath: ${restorePath}\
         \n\t originalErr: ${err.message || obj2str(err)}`

@@ -34,15 +34,27 @@ export default function restoreKV(kvName, restorePath) {
   let kv = new KV()
   let _keys = P.resolve()
     .then(() => readArray(restoreVaultPlan._keys.restoreKeyPath, str2obj))
+    .tap(it => it.length === restoreVaultPlan._keys.dumpLength
+      ? P.resolve()
+      : P.reject(new Error(`restoreKV problem: unexpected _keys dump size\
+          \n\t expected dump size: ${restoreVaultPlan._keys.dumpLength}\
+          \n\t actual dump size: ${it.length}\
+          \n\t actual dump path: ${restoreVaultPlan._keys.restoreKeyPath}`)))
     .then(it => kv._keys = it)
   let _values = P.resolve()
     .then(() => readArray(restoreVaultPlan._values.restoreKeyPath, str2obj))
+    .tap(it => it.length === restoreVaultPlan._values.dumpLength
+      ? P.resolve()
+      : P.reject(new Error(`restoreKV problem: unexpected _values dump size\
+          \n\t expected dump size: ${restoreVaultPlan._values.dumpLength}\
+          \n\t actual dump size: ${it.length}\
+          \n\t actual dump path: ${restoreVaultPlan._values.restoreKeyPath}`)))
     .then(it => kv._values = it)
 
   return P.join(_keys, _values)
     .return(kv)
     .catch(err => {
-      let message = `restoreKV problem!'\
+      let message = `restoreKV problem!\
         \n\t kvName: ${kvName}\
         \n\t restorePath: ${restorePath}\
         \n\t originalErr: ${err.message || obj2str(err)}`

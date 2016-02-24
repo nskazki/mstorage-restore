@@ -30,7 +30,7 @@ export default function storeKV(kv, kvName, restorePath) {
 
     writeJsonSync(restorePath, restorePlanSumm, { spaces: 2 })
 
-    let restoreVaultPlan = buildVaultPlan(kvName, restoreVaultPath)
+    let restoreVaultPlan = buildVaultPlan(kv, kvName, restoreVaultPath)
     writeJsonSync(restoreVaultPath, restoreVaultPlan, { spaces: 2 })
 
     debug(`kv: ${kvName}`)
@@ -53,17 +53,19 @@ export default function storeKV(kv, kvName, restorePath) {
   })
 }
 
-function buildVaultPlan(kvName, restoreVaultPath) {
+function buildVaultPlan(kv, kvName, restoreVaultPath) {
   return {
     restoreVaultType: 'KV',
     restoreVaultName: kvName,
     restoreVaultPath,
 
     _keys: {
+      dumpLength: kv._keys.length,
       restoreKeyPath: `${restoreVaultPath}._keys`,
       restoreKeyName: '_keys'
     },
     _values: {
+      dumpLength: kv._values.length,
       restoreKeyPath: `${restoreVaultPath}._values`,
       restoreKeyName: '_values'
     }

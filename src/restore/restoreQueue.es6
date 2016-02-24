@@ -34,15 +34,27 @@ export default function restoreQueue(queueName, restorePath) {
   let queue = new Queue()
   let _storage = P.resolve()
     .then(() => readArray(restoreVaultPlan._storage.restoreKeyPath, str2obj))
+    .tap(it => it.length === restoreVaultPlan._storage.dumpLength
+      ? P.resolve()
+      : P.reject(new Error(`restoreQueue problem: unexpected _storage dump size\
+          \n\t expected dump size: ${restoreVaultPlan._storage.dumpLength}\
+          \n\t actual dump size: ${it.length}\
+          \n\t actual dump path: ${restoreVaultPlan._storage.restoreKeyPath}`)))
     .then(it => queue._storage = it)
   let _queue = P.resolve()
     .then(() => readArray(restoreVaultPlan._queue.restoreKeyPath, parseInt))
+    .tap(it => it.length === restoreVaultPlan._queue.dumpLength
+      ? P.resolve()
+      : P.reject(new Error(`restoreQueue problem: unexpected _queue dump size\
+          \n\t expected dump size: ${restoreVaultPlan._queue.dumpLength}\
+          \n\t actual dump size: ${it.length}\
+          \n\t actual dump path: ${restoreVaultPlan._queue.restoreKeyPath}`)))
     .then(it => queue._queue = it)
 
   return P.join(_storage, _queue)
     .return(queue)
     .catch(err => {
-      let message = `restoreQueue problem!'\
+      let message = `restoreQueue problem!\
         \n\t queueName: ${queueName}\
         \n\t restorePath: ${restorePath}\
         \n\t originalErr: ${err.message || obj2str(err)}`

@@ -30,7 +30,7 @@ export default function storeHashVault(hashVault, hashVaultName, restorePath) {
 
     writeJsonSync(restorePath, restorePlanSumm, { spaces: 2 })
 
-    let restoreVaultPlan = buildVaultPlan(hashVaultName, restoreVaultPath)
+    let restoreVaultPlan = buildVaultPlan(hashVault, hashVaultName, restoreVaultPath)
     writeJsonSync(restoreVaultPath, restoreVaultPlan, { spaces: 2 })
 
     debug(`hashVault: ${hashVaultName}`)
@@ -50,13 +50,14 @@ export default function storeHashVault(hashVault, hashVaultName, restorePath) {
   })
 }
 
-function buildVaultPlan(hashVaultName, restoreVaultPath) {
+function buildVaultPlan(hashVault, hashVaultName, restoreVaultPath) {
   return {
     restoreVaultType: 'HashVault',
     restoreVaultName: hashVaultName,
     restoreVaultPath,
 
     _array: {
+      dumpLength: hashVault._array.length,
       restoreKeyPath: `${restoreVaultPath}._array`,
       restoreKeyName: '_array'
     }

@@ -30,7 +30,7 @@ export default function storeQueue(queue, queueName, restorePath) {
 
     writeJsonSync(restorePath, restorePlanSumm, { spaces: 2 })
 
-    let restoreVaultPlan = buildVaultPlan(queueName, restoreVaultPath)
+    let restoreVaultPlan = buildVaultPlan(queue, queueName, restoreVaultPath)
     writeJsonSync(restoreVaultPath, restoreVaultPlan, { spaces: 2 })
 
     debug(`queue: ${queueName}`)
@@ -53,17 +53,19 @@ export default function storeQueue(queue, queueName, restorePath) {
   })
 }
 
-function buildVaultPlan(queueName, restoreVaultPath) {
+function buildVaultPlan(queue, queueName, restoreVaultPath) {
   return {
     restoreVaultType: 'Queue',
     restoreVaultName: queueName,
     restoreVaultPath,
 
     _storage: {
+      dumpLength: queue._storage.length,
       restoreKeyPath: `${restoreVaultPath}._storage`,
       restoreKeyName: '_storage'
     },
     _queue: {
+      dumpLength: queue._queue.length,
       restoreKeyPath: `${restoreVaultPath}._queue`,
       restoreKeyName: '_queue'
     }
