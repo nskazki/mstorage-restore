@@ -58,7 +58,7 @@ size      created  stored  restored  compared  afterCreatedMem  afterStoredMem  
 
 ```js
 import { KV, Queue } from 'mstorage'
-import { store, restore, unstore } from 'mstorage-restore'
+import { store, restore, unstoreStrict } from 'mstorage-restore'
 import assert from 'assert'
 import P from 'bluebird'
 
@@ -81,8 +81,18 @@ P.resolve()
   .then(() => store({ fooKV, barKV, abcQ }, restorePath))
   .then(() => restore(restorePath))
   .then(it => assert.deepStrictEqual(it, { fooKV, barKV, abcQ }))
-  .then(() => unstore(restorePath))
+  .then(() => unstoreStrict(restorePath))
 ```
+
+### API
+
+* `store(plainObject, path) -> Promise` - can record data types defined in the [mstorage](https://github.com/nskazki/mstorage)
+* `exists(path) -> Promise` - like `fs.exists`
+* `restore(path) -> Promise` - returns the reconstructed `plainObject`
+* `unstore(path) -> Promise` - like `rm $storage-path.*` 
+* `unstoreStrict(path) -> Promise` - removes in strict accordance with the recovery plan
+* `cp(oldPath, newPath) -> Promise` - just `cp` recovery files
+* `mv(oldPath, newPath) -> Promise` - just `mv` recovery files
 
 ### Debug and other
 
