@@ -55,7 +55,7 @@
     "mstorage": "^1.2.4",
     "power-assert": "^1.2.0",
     "pretty-ms": "^2.1.0",
-    "tmp": "0.0.28",
+    "tmp": "0.2.4",
     "try-gc": "^1.0.0"
   },
   "dependencies": {
